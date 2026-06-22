@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_Preview__preview_start",
+      "Bash(npm run *)",
+      "WebSearch",
+      "mcp__Claude_in_Chrome__switch_browser",
+      "mcp__Claude_in_Chrome__list_connected_browsers",
+      "Bash(gh api *)",
+      "WebFetch(domain:api.github.com)",
+      "mcp__Claude_in_Chrome__select_browser",
+      "mcp__Claude_in_Chrome__navigate",
+      "mcp__Claude_in_Chrome__browser_batch",
+      "mcp__Claude_in_Chrome__get_page_text",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git -c 'user.name=Suyash Kulkarni' -c user.email=kulkarnisuyash999@gmail.com commit -q -m ' *)"
+    ]
+  }
+}

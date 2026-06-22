@@ -1,0 +1,158 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  @apply bg-canvas text-ink font-sans antialiased;
+  /* faint dot grid, like a design canvas */
+  background-image: radial-gradient(rgba(0, 0, 0, 0.07) 1px, transparent 1px);
+  background-size: 22px 22px;
+  background-attachment: fixed;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Space Grotesk", "Inter", sans-serif;
+  letter-spacing: -0.02em;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #d9d9d9;
+}
+::-webkit-scrollbar-thumb {
+  background: #0a0a0a;
+  border-radius: 999px;
+  border: 2px solid #d9d9d9;
+}
+
+@layer components {
+  /* white "frame" card sitting on the canvas */
+  .frame {
+    @apply rounded-3xl border border-black/[0.06] bg-frame shadow-[0_18px_60px_-30px_rgba(0,0,0,0.4)];
+  }
+
+  .frame-hover {
+    @apply transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_30px_80px_-30px_rgba(0,0,0,0.45)];
+  }
+
+  .section-pad {
+    @apply mx-auto max-w-6xl px-5 py-16 md:py-20;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-black/[0.03] px-3 py-1 text-sm text-ink;
+  }
+
+  /* small pill button (top bar / toolbar), white with subtle shadow */
+  .pill {
+    @apply inline-flex items-center gap-2 rounded-full border border-black/[0.06] bg-white px-4 py-2.5 text-sm font-medium text-ink shadow-[0_8px_24px_-12px_rgba(0,0,0,0.4)] transition-all hover:-translate-y-0.5;
+  }
+
+  .tag {
+    @apply rounded-md border border-black/10 bg-black/[0.02] px-2.5 py-1 font-mono text-xs text-ink-soft;
+  }
+
+  .mono-label {
+    @apply font-mono text-xs uppercase tracking-[0.22em] text-ink-soft;
+  }
+}
+
+@keyframes stampPop {
+  0% {
+    transform: translate(-50%, -50%) scale(0.2);
+    opacity: 0;
+  }
+  18% {
+    transform: translate(-50%, -50%) scale(1.25);
+    opacity: 1;
+  }
+  35% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -90%) scale(1);
+    opacity: 0;
+  }
+}
+.stamp {
+  animation: stampPop 2.2s ease-out forwards;
+}
+
+@keyframes barPulse {
+  0%,
+  100% {
+    transform: scaleY(0.45);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+/* ---- Dark mode (toggled via the sun/moon control) ---- */
+html.dark body {
+  background-color: #0a0a0a;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  color: #ededed;
+}
+html.dark ::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: #ededed;
+  border-color: #0a0a0a;
+}
+html.dark .text-ink {
+  color: #f2f2f2 !important;
+}
+html.dark .text-ink-soft {
+  color: #9a9a9a !important;
+}
+html.dark .frame {
+  background-color: #151515 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+html.dark .chip {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: #f2f2f2;
+}
+html.dark .tag {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #bdbdbd;
+}
+html.dark .bg-ink {
+  background-color: #f2f2f2 !important;
+  color: #0a0a0a !important;
+}
+html.dark .text-white {
+  color: #f2f2f2;
+}
+/* darken the floating white chrome + menu so light text stays readable */
+html.dark .bg-white,
+html.dark .pill {
+  background-color: #1a1a1a !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
