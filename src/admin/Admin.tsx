@@ -2,10 +2,13 @@ import { useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { defaultContent, STORAGE_KEY } from "../data";
 
-// NOTE: this is a soft, client-side gate (the passphrase ships in the bundle).
-// Edits are stored in your browser; they don't change what visitors see until
-// you publish/redeploy. Change this passphrase to whatever you like.
-const ADMIN_PASS = "suyash-admin";
+// Your admin passphrase. Set it privately in a .env file as
+//   VITE_ADMIN_PASS=your-secret
+// (kept out of git via .gitignore). Falls back to a default if unset.
+// Note: this gate protects the editor UI; what visitors see only changes when
+// YOU publish/redeploy, which requires your hosting login.
+const ADMIN_PASS =
+  (import.meta.env.VITE_ADMIN_PASS as string | undefined) || "suyash-admin";
 
 const clone = <T,>(v: T): T => JSON.parse(JSON.stringify(v));
 

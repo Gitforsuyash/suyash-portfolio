@@ -1,51 +1,31 @@
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
 import type { ReactNode } from "react";
 
 /**
- * HSection — ties a whole section's horizontal position to scroll.
- * As you scroll DOWN, the entire section pans right → left (enters from the
- * right, settles centered, exits to the left). Scrolling UP reverses it.
- * The whole "screen" moves as one unit — not the individual components.
- */
-export function HSection({ children }: { children: ReactNode }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const x = useTransform(scrollYProgress, [0, 0.24, 0.78, 1], [180, 0, 0, -180]);
-  const opacity = useTransform(
-    scrollYProgress,
-    [0, 0.16, 0.86, 1],
-    [0, 1, 1, 0]
-  );
-  return (
-    <motion.div
-      ref={ref}
-      style={{ x, opacity }}
-      className="relative will-change-transform"
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-/**
- * Reveal — now a passthrough wrapper. Motion lives at the section level
- * (HSection), so individual cards no longer slide in on their own.
- * The `delay` / `from` props are accepted but ignored.
+ * Reveal — a gentle fade-in (slight upward rise) as a block scrolls into view.
+ * Triggers once. The `from` prop is accepted for backwards-compat but ignored.
  */
 export function Reveal({
   children,
   className = "",
+  delay = 0,
 }: {
   children: ReactNode;
   className?: string;
   delay?: number;
   from?: "up" | "down" | "left" | "right";
 }) {
-  return <div className={className}>{children}</div>;
+  return (
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
 }
 
 export function SectionHeading({
@@ -60,7 +40,7 @@ export function SectionHeading({
   index?: string;
 }) {
   return (
-    <div className="mb-12 max-w-3xl">
+    <Reveal className="mb-12 max-w-3xl">
       <div className="mb-5 flex items-center gap-3">
         {index && <span className="font-mono text-sm text-ink">{index}</span>}
         <span className="mono-label">{eyebrow}</span>
@@ -74,6 +54,6 @@ export function SectionHeading({
           {subtitle}
         </p>
       )}
-    </div>
+    </Reveal>
   );
 }

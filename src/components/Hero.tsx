@@ -12,7 +12,7 @@ export default function Hero() {
             <ParticleMorph
               phrases={[
                 "Hey there",
-                "this is Suyash",
+                "This is Suyash",
                 "I design",
                 "I build",
                 "AI Systems",
@@ -20,6 +20,11 @@ export default function Hero() {
             />
           </div>
         </Suspense>
+
+        {/* waving hello hand */}
+        <div className="pointer-events-none absolute left-1/2 top-[14%] -translate-x-1/2 select-none text-5xl sm:text-6xl">
+          <span className="inline-block animate-wave">👋</span>
+        </div>
 
         {/* corner labels */}
         <div className="pointer-events-none absolute left-6 top-6 font-mono text-[11px] uppercase tracking-[0.22em] text-white/55">
