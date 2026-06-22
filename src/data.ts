@@ -2,7 +2,7 @@
 //  All site content lives here. Edit this file to update the portfolio.
 // ============================================================================
 
-export const profile = {
+const _profile = {
   name: "Suyash Kulkarni",
   // Identity / headline shown in the hero
   title: "AI Engineer & Product Manager",
@@ -27,7 +27,7 @@ export const profile = {
   },
 };
 
-export const stats = [
+const _stats = [
   { value: "3+", label: "AI products shipped" },
   { value: "10+", label: "LLM / RAG systems" },
   { value: "4", label: "Professional roles" },
@@ -45,7 +45,7 @@ export type Experience = {
   tags: string[];
 };
 
-export const experience: Experience[] = [
+const _experience: Experience[] = [
   {
     role: "AI Engineer",
     company: "SAS-AI",
@@ -111,7 +111,7 @@ export type Project = {
   linkLabel?: string;
 };
 
-export const projects: Project[] = [
+const _projects: Project[] = [
   {
     title: "Brief AI",
     blurb:
@@ -167,7 +167,7 @@ export const projects: Project[] = [
 ];
 
 // ---- Product Management coursework (done end-to-end, solo) -------------------
-export const productManagement = {
+const _productManagement = {
   title: "Product Management in Generative AI & Agentic AI",
   provider: "BITSoM / Masai Platform",
   status: "In Progress",
@@ -251,7 +251,7 @@ export const productManagement = {
   ],
 };
 
-export const skills: { group: string; items: string[] }[] = [
+const _skills: { group: string; items: string[] }[] = [
   {
     group: "AI / LLMs",
     items: [
@@ -330,7 +330,7 @@ export const skills: { group: string; items: string[] }[] = [
   },
 ];
 
-export const certifications = [
+const _certifications = [
   {
     name: "Product Management in Generative AI and Agentic AI",
     issuer: "BITSoM / Masai Platform",
@@ -350,7 +350,7 @@ export const certifications = [
   },
 ];
 
-export const education = {
+const _education = {
   degree: "Bachelor of Engineering",
   school: "Marathwada Institute of Technology, Pune",
   period: "Dec 2021 – Sept 2025",
@@ -361,3 +361,48 @@ export const education = {
     "Electrical Engineering",
   ],
 };
+
+// ============================================================================
+//  Editable content store
+//  Defaults above can be overridden at runtime via the /admin editor, which
+//  saves an override object to localStorage. Components import the named
+//  exports below and automatically pick up any saved edits on load.
+// ============================================================================
+
+const _defaults = {
+  profile: _profile,
+  stats: _stats,
+  experience: _experience,
+  projects: _projects,
+  productManagement: _productManagement,
+  skills: _skills,
+  certifications: _certifications,
+  education: _education,
+};
+
+export type SiteContent = typeof _defaults;
+export const STORAGE_KEY = "siteContent";
+export const defaultContent: SiteContent = _defaults;
+
+function loadContent(): SiteContent {
+  if (typeof window !== "undefined") {
+    try {
+      const raw = window.localStorage.getItem(STORAGE_KEY);
+      if (raw) return { ..._defaults, ...JSON.parse(raw) };
+    } catch {
+      /* fall back to defaults on any parse error */
+    }
+  }
+  return _defaults;
+}
+
+const _content = loadContent();
+
+export const profile = _content.profile;
+export const stats = _content.stats;
+export const experience = _content.experience;
+export const projects = _content.projects;
+export const productManagement = _content.productManagement;
+export const skills = _content.skills;
+export const certifications = _content.certifications;
+export const education = _content.education;

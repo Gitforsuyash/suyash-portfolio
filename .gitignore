@@ -24,3 +24,8 @@ dist-ssr
 
 # Vercel
 .vercel
+
+# tsc -b composite build artifacts
+vite.config.js
+vite.config.d.ts
+*.tsbuildinfo

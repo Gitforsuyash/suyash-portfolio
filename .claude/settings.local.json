@@ -14,7 +14,8 @@
       "mcp__Claude_in_Chrome__get_page_text",
       "Bash(git init *)",
       "Bash(git add *)",
-      "Bash(git -c 'user.name=Suyash Kulkarni' -c user.email=kulkarnisuyash999@gmail.com commit -q -m ' *)"
+      "Bash(git -c 'user.name=Suyash Kulkarni' -c user.email=kulkarnisuyash999@gmail.com commit -q -m ' *)",
+      "Bash(git rm *)"
     ]
   }
 }
