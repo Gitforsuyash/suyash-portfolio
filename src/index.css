@@ -98,26 +98,6 @@ h3 {
   animation: stampPop 2.2s ease-out forwards;
 }
 
-@keyframes wave {
-  0%,
-  60%,
-  100% {
-    transform: rotate(0deg);
-  }
-  10%,
-  30% {
-    transform: rotate(14deg);
-  }
-  20%,
-  40% {
-    transform: rotate(-8deg);
-  }
-}
-.animate-wave {
-  transform-origin: 70% 80%;
-  animation: wave 2.4s ease-in-out infinite;
-}
-
 @keyframes barPulse {
   0%,
   100% {
