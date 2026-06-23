@@ -20,8 +20,7 @@ const _profile = {
     "Technically fluent AI Engineer and Product Manager who builds and ships Generative AI and ML-powered products end to end. I bridge business strategy and engineering — defining GenAI roadmaps, turning complex problems into LLM/RAG and agentic solutions, and driving measurable outcomes alongside ML, data, and engineering teams.",
   // NOTE: phone number intentionally not shown on the site.
   socials: {
-    // TODO: replace with your real LinkedIn profile URL
-    linkedin: "https://www.linkedin.com/in/suyash-kulkarni",
+    linkedin: "https://www.linkedin.com/in/suyash-kulkarni-yes777/",
     github: "https://github.com/Gitforsuyash",
     huggingface: "https://huggingface.co/HugFace4Suyash",
   },

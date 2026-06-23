@@ -16,7 +16,10 @@
       "Bash(git add *)",
       "Bash(git -c 'user.name=Suyash Kulkarni' -c user.email=kulkarnisuyash999@gmail.com commit -q -m ' *)",
       "Bash(git rm *)",
-      "PowerShell($gh = \\(Get-Command gh -ErrorAction SilentlyContinue\\); \"gh path: $\\($gh.Source\\)\"; if \\($gh\\) { gh auth status 2>&1 | Out-String }; \"--- vercel ---\"; $v = \\(Get-Command vercel -ErrorAction SilentlyContinue\\); \"vercel path: $\\($v.Source\\)\"; \"--- git remote ---\"; git remote -v; \"--- git user ---\"; git config user.name; git config user.email)"
+      "PowerShell($gh = \\(Get-Command gh -ErrorAction SilentlyContinue\\); \"gh path: $\\($gh.Source\\)\"; if \\($gh\\) { gh auth status 2>&1 | Out-String }; \"--- vercel ---\"; $v = \\(Get-Command vercel -ErrorAction SilentlyContinue\\); \"vercel path: $\\($v.Source\\)\"; \"--- git remote ---\"; git remote -v; \"--- git user ---\"; git config user.name; git config user.email)",
+      "PowerShell(vercel whoami 2>&1)",
+      "PowerShell(\"--- vercel whoami ---\")",
+      "PowerShell(\"--- git remote ---\")"
     ]
   }
 }
