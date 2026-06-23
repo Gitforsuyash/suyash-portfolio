@@ -11,7 +11,7 @@ export default function Hero() {
           <div className="absolute inset-0">
             <ParticleMorph
               phrases={[
-                "Hey there 👋",
+                "Hey there",
                 "This is Suyash",
                 "I design",
                 "I build",
