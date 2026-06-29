@@ -2,6 +2,8 @@
 //  All site content lives here. Edit this file to update the portfolio.
 // ============================================================================
 
+import { STORAGE_KEY } from "./lib/keys";
+
 const _profile = {
   name: "Suyash Kulkarni",
   // Identity / headline shown in the hero
@@ -380,7 +382,7 @@ const _defaults = {
 };
 
 export type SiteContent = typeof _defaults;
-export const STORAGE_KEY = "siteContent";
+export { STORAGE_KEY };
 export const defaultContent: SiteContent = _defaults;
 
 function loadContent(): SiteContent {

@@ -1,6 +1,13 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { defaultContent, STORAGE_KEY } from "../data";
+import {
+  currentEmail,
+  isSupabaseConfigured,
+  saveContent,
+  signIn,
+  signOut,
+} from "../lib/supabase";
 
 // Your admin passphrase. Set it privately in a .env file as
 //   VITE_ADMIN_PASS=your-secret
@@ -173,12 +180,23 @@ function ArrayEditor({
 
 export default function Admin() {
   const [authed, setAuthed] = useState(
-    () => sessionStorage.getItem("adminAuthed") === "1"
+    () => !isSupabaseConfigured && sessionStorage.getItem("adminAuthed") === "1"
   );
+  const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
+  const [authErr, setAuthErr] = useState("");
   const [content, setContent] = useState<any>(loadInitial);
   const [saved, setSaved] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // Restore an existing Supabase session (so you stay logged in).
+  useEffect(() => {
+    if (isSupabaseConfigured) {
+      currentEmail()
+        .then((e) => e && setAuthed(true))
+        .catch(() => {});
+    }
+  }, []);
 
   const set = (key: string, value: any) =>
     setContent((c: any) => ({ ...c, [key]: value }));
@@ -192,10 +210,33 @@ export default function Admin() {
     [content]
   );
 
-  const save = () => {
+  const save = async () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(content));
+    if (isSupabaseConfigured) {
+      try {
+        await saveContent(content);
+      } catch (e: any) {
+        alert(
+          "Saved on this device, but publishing live failed:\n" +
+            (e?.message || e)
+        );
+        return;
+      }
+    }
     setSaved(true);
     window.setTimeout(() => setSaved(false), 2500);
+  };
+  const logout = async () => {
+    if (isSupabaseConfigured) {
+      try {
+        await signOut();
+      } catch {
+        /* ignore */
+      }
+    } else {
+      sessionStorage.removeItem("adminAuthed");
+    }
+    setAuthed(false);
   };
   const exportJson = () => {
     const blob = new Blob([JSON.stringify(content, null, 2)], {
@@ -230,32 +271,55 @@ export default function Admin() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            if (pass === ADMIN_PASS) {
+            setAuthErr("");
+            if (isSupabaseConfigured) {
+              try {
+                await signIn(email.trim(), pass);
+                setAuthed(true);
+              } catch (err: any) {
+                setAuthErr(err?.message || "Sign-in failed.");
+              }
+            } else if (pass === ADMIN_PASS) {
               sessionStorage.setItem("adminAuthed", "1");
               setAuthed(true);
-            } else alert("Incorrect passphrase.");
+            } else {
+              setAuthErr("Incorrect passphrase.");
+            }
           }}
           className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-7 shadow-xl"
         >
           <h1 className="text-xl font-bold text-slate-900">Portfolio admin</h1>
           <p className="mt-1 text-sm text-slate-500">
-            Enter your passphrase to edit your content.
+            {isSupabaseConfigured
+              ? "Sign in with your admin email and password."
+              : "Enter your passphrase to edit your content."}
           </p>
+          {isSupabaseConfigured && (
+            <input
+              type="email"
+              autoFocus
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              className="mt-5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-900"
+            />
+          )}
           <input
             type="password"
-            autoFocus
+            autoFocus={!isSupabaseConfigured}
             value={pass}
             onChange={(e) => setPass(e.target.value)}
-            placeholder="Passphrase"
-            className="mt-5 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-900"
+            placeholder={isSupabaseConfigured ? "Password" : "Passphrase"}
+            className="mt-3 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-900"
           />
+          {authErr && <p className="mt-2 text-sm text-red-600">{authErr}</p>}
           <button
             type="submit"
             className="mt-3 w-full rounded-lg bg-slate-900 py-2.5 text-sm font-semibold text-white hover:bg-slate-700"
           >
-            Unlock
+            {isSupabaseConfigured ? "Sign in" : "Unlock"}
           </button>
         </form>
       </div>
@@ -286,6 +350,12 @@ export default function Admin() {
           >
             View site
           </a>
+          <button
+            onClick={logout}
+            className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium hover:bg-slate-100"
+          >
+            Log out
+          </button>
           <input
             ref={fileRef}
             type="file"
@@ -322,9 +392,19 @@ export default function Admin() {
 
       <main className="mx-auto max-w-3xl px-5 py-8">
         <p className="mb-6 rounded-xl border border-slate-200 bg-white p-3 text-xs text-slate-500">
-          Edits are saved in this browser. Click <b>Save</b>, then <b>View site</b>{" "}
-          to see them. To publish for everyone, <b>Export</b> the file and update
-          your deployment (or connect a backend — ask Claude).
+          {isSupabaseConfigured ? (
+            <>
+              Connected to your live backend. Click <b>Save</b> and your changes
+              go live for <b>everyone</b> instantly.
+            </>
+          ) : (
+            <>
+              Edits are saved in this browser. Click <b>Save</b>, then{" "}
+              <b>View site</b> to see them. To publish for everyone, <b>Export</b>{" "}
+              the file and update your deployment (or connect Supabase — ask
+              Claude).
+            </>
+          )}
         </p>
 
         {/* PROFILE */}
